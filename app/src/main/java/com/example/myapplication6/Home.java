@@ -37,6 +37,8 @@ import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -47,6 +49,8 @@ public class Home extends AppCompatActivity
     TextView txtFullName;
     RecyclerView recycle_menu;
     RecyclerView.LayoutManager layoutManager;
+    private FirebaseAuth.AuthStateListener authListener;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +60,25 @@ public class Home extends AppCompatActivity
 
         toolbar.setTitle("Menu");
         setSupportActionBar(toolbar);
+
+        //get firebase auth instance
+        auth = FirebaseAuth.getInstance();
+
+        //get current user
+        final FirebaseUser users = FirebaseAuth.getInstance().getCurrentUser();
+
+        authListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser users = firebaseAuth.getCurrentUser();
+                if (users == null) {
+                    // user auth state is changed - user is null
+                    // launch login activity
+                    startActivity(new Intent(Home.this, MainActivity.class));
+                    finish();
+                }
+            }
+        };
 
         //init firebase
         database = FirebaseDatabase.getInstance();
@@ -80,7 +103,7 @@ public class Home extends AppCompatActivity
 
         View header = navigationView.getHeaderView(0);
         txtFullName = (TextView) header.findViewById(R.id.txtFullName);
-        txtFullName.setText(Common.currentUser.getName());
+        //txtFullName.setText(Common.currentUser.getName());
 
         //load menu
         recycle_menu = (RecyclerView) findViewById(R.id.recycler_menu);
@@ -126,12 +149,21 @@ public class Home extends AppCompatActivity
         recycle_menu.setAdapter(adapter);
 
     }
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        auth.addAuthStateListener(authListener);
+    }
     @Override
     protected void onStop() {
         super.onStop();
+        if (authListener != null) {
+            auth.removeAuthStateListener(authListener);
+        }
         adapter.stopListening();
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -178,11 +210,17 @@ public class Home extends AppCompatActivity
         } else if (id == R.id.nav_orders) {
 
         } else if (id == R.id.nav_logout) {
-
+            signOut();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+    //sign out method
+    public void signOut() {
+        auth.signOut();
+
+    }
+
 }

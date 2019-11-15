@@ -4,21 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/kkk"
+    android:background="@drawable/back1"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
     <Button
         android:id="@+id/btnSignIn"
-        android:layout_width="132dp"
-        android:layout_height="53dp"
+        android:layout_width="154dp"
+        android:layout_height="54dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginStart="170dp"
 
-        android:layout_marginTop="442dp"
-        android:layout_marginEnd="152dp"
-        android:layout_marginBottom="238dp"
+        android:layout_marginStart="130dp"
+        android:layout_marginTop="460dp"
+        android:layout_marginEnd="128dp"
+        android:layout_marginBottom="217dp"
         android:background="@drawable/rounded_button"
+
         android:text="@string/SignIn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

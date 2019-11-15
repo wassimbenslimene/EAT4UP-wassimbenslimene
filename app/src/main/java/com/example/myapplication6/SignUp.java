@@ -1,111 +1,111 @@
 package com.example.myapplication6;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.ProgressDialog;
-import android.os.Bundle;
-
 import android.content.Intent;
+import android.os.Bundle;
+//import android.support.annotation.NonNull;
+//import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.myapplication6.model.User;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class SignUp extends AppCompatActivity {
-    private EditText inputname,inputEmail, inputPassword;
+
+    private EditText inputEmail, inputname,inputPassword;
     private Button btnSignIn, btnSignUp, btnResetPassword;
+    private ProgressBar progressBar;
+    private FirebaseAuth auth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        //Get Firebase auth instance
+        auth = FirebaseAuth.getInstance();
 
         btnSignIn = (Button) findViewById(R.id.sign_in_button);
         btnSignUp = (Button) findViewById(R.id.sign_up_button);
         inputEmail = (EditText) findViewById(R.id.email);
+        inputname = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
-        inputname = (EditText) findViewById(R.id.name);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        btnResetPassword = (Button) findViewById(R.id.btn_reset_password);
 
-
-        FirebaseDatabase database =FirebaseDatabase.getInstance();
-        final DatabaseReference table_user =database.getReference("user");
+        btnResetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SignUp.this, ResetPasswordActivity.class));
+            }
+        });
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent signIn = new Intent(SignUp.this, SignIn.class);
-                startActivity(signIn);
+            public void onClick(View v) {
+                finish();
             }
         });
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final ProgressDialog mDialog = new ProgressDialog(SignUp.this);
-                mDialog.setMessage(" waiting");
-                mDialog.show();
 
                 String email = inputEmail.getText().toString().trim();
                 String password = inputPassword.getText().toString().trim();
 
                 if (TextUtils.isEmpty(email)) {
-                    mDialog.dismiss();
                     Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
-
                     return;
                 }
 
                 if (TextUtils.isEmpty(password)) {
-                    mDialog.dismiss();
                     Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
-
                     return;
                 }
 
                 if (password.length() < 6) {
-                    mDialog.dismiss();
                     Toast.makeText(getApplicationContext(), "Password too short, enter minimum 6 characters!", Toast.LENGTH_SHORT).show();
-
+                    return;
                 }
-                else
-                {
-                    table_user.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            //check if user not exist in database
-                            if(dataSnapshot.child(inputEmail.getText().toString()).exists()) {
-                                //get user information
-                                mDialog.dismiss();
-                                Toast.makeText(SignUp.this, "Email alreay register", Toast.LENGTH_SHORT).show();
-                            }
-                            else
-                            {
-                                mDialog.dismiss();
-                                User user = new User(inputname.getText().toString(),inputPassword.getText().toString());
-                                table_user.child(inputEmail.getText().toString()).setValue(user);
-                                Toast.makeText(SignUp.this, "sign up successfuly", Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-                        }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                progressBar.setVisibility(View.VISIBLE);
+                //create user
+                auth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(SignUp.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                Toast.makeText(SignUp.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
+                                progressBar.setVisibility(View.GONE);
+                                // If sign in fails, display a message to the user. If sign in succeeds
+                                // the auth state listener will be notified and logic to handle the
+                                // signed in user can be handled in the listener.
+                                if (!task.isSuccessful()) {
+                                    Toast.makeText(SignUp.this, "Authentication failed." + task.getException(),
+                                            Toast.LENGTH_SHORT).show();
+                                } else {
+                                    startActivity(new Intent(SignUp.this, Home.class));
+                                    finish();
+                                }
+                            }
+                        });
 
-                        }
-                    });
-                }
             }
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        progressBar.setVisibility(View.GONE);
+    }
 }

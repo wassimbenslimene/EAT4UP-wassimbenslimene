@@ -2,6 +2,7 @@ package com.example.myapplication6;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +20,8 @@ import com.example.myapplication6.model.Category;
 import com.example.myapplication6.model.Food;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -32,11 +35,15 @@ public class FoodList extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference foodList;
     FirebaseRecyclerAdapter<Food, FoodViewHolder> adapter;
-    String categoryId="";
+    String categoryId = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_list);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         //firebase
         database = FirebaseDatabase.getInstance();
         foodList = database.getReference("Foods");
@@ -46,22 +53,23 @@ public class FoodList extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         //get intent here
-        if(getIntent() != null)
-            categoryId=  getIntent().getStringExtra("CategoryId");
+        if (getIntent() != null)
+            categoryId = getIntent().getStringExtra("CategoryId");
 
-        if(!categoryId.isEmpty() && categoryId != null){
+        if (categoryId != null && !categoryId.isEmpty()) {
             loadListFood(categoryId);
         }
 
     }
-    private void loadListFood(String categoryId){
+
+    private void loadListFood(String categoryId) {
         Query SearchByName = foodList.orderByChild("MenuId").equalTo(categoryId);
         FirebaseRecyclerOptions<Food> foodoptions = new FirebaseRecyclerOptions.Builder<Food>()
                 .setQuery(SearchByName, Food.class)
                 .build();
         adapter = new FirebaseRecyclerAdapter<Food, FoodViewHolder>(foodoptions) {
             @Override
-            protected void onBindViewHolder(@NonNull FoodViewHolder viewHolder, int position, @NonNull final Food model) {
+            protected void onBindViewHolder(@NonNull FoodViewHolder viewHolder, final int position, @NonNull final Food model) {
                 viewHolder.food_name.setText(model.getName());
                 Picasso.with(getBaseContext()).load(model.getImage())
                         .into(viewHolder.food_image);
@@ -70,7 +78,9 @@ public class FoodList extends AppCompatActivity {
 
                     @Override
                     public void onclick(View view, int positin, boolean isLongClick) {
-                        Toast.makeText(FoodList.this,""+local.getName(),Toast.LENGTH_SHORT).show();
+                        Intent foodDetail = new Intent(FoodList.this, FoodDetail.class);
+                        foodDetail.putExtra("FoodId", adapter.getRef(position).getKey());
+                        startActivity(foodDetail);
                     }
                 });
             }
@@ -82,6 +92,8 @@ public class FoodList extends AppCompatActivity {
                         .inflate(R.layout.food_item, parent, false);
                 return new FoodViewHolder(itemView);
             }
+
+
         };
         adapter.startListening();
 
@@ -89,9 +101,19 @@ public class FoodList extends AppCompatActivity {
 
 
     }
+
     @Override
-    protected void onStop() {
-        super.onStop();
-        adapter.stopListening();
+    protected void onDestroy() {
+        super.onDestroy();
+       adapter.stopListening();
+        Intent home = new Intent(FoodList.this, Home.class);
+
+        startActivity(home);
+    }
+    @Override
+    public void onBackPressed() {
+        Intent home = new Intent(FoodList.this, Home.class);
+
+        startActivity(home);
     }
 }
