@@ -37,6 +37,7 @@ import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -60,6 +61,7 @@ public class Home extends AppCompatActivity
 
         toolbar.setTitle("Menu");
         setSupportActionBar(toolbar);
+
 
         //get firebase auth instance
         auth = FirebaseAuth.getInstance();
@@ -88,8 +90,9 @@ public class Home extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent cartIntent = new Intent(Home.this, Cart.class);
+                startActivity(cartIntent);
+                finish();
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -100,10 +103,18 @@ public class Home extends AppCompatActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         //setname for user
-
         View header = navigationView.getHeaderView(0);
         txtFullName = (TextView) header.findViewById(R.id.txtFullName);
-        //txtFullName.setText(Common.currentUser.getName());
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // Name, email address, and profile photo Url
+            String name = user.getDisplayName();
+            String email = user.getEmail();
+            txtFullName.setText(email);
+        }
+
+
+
 
         //load menu
         recycle_menu = (RecyclerView) findViewById(R.id.recycler_menu);
@@ -129,9 +140,9 @@ public class Home extends AppCompatActivity
                     @Override
                     public void onclick(View view, int positin, boolean isLongClick) {
                         //get category and send to new activity
-                        Intent foodList = new Intent(Home.this,FoodList.class);
+                        Intent foodList = new Intent(Home.this, FoodList.class);
                         //because category is key so we just get key of this item
-                        foodList.putExtra("CategoryId",adapter.getRef(position).getKey());
+                        foodList.putExtra("CategoryId", adapter.getRef(position).getKey());
                         startActivity(foodList);
                     }
                 });
@@ -149,11 +160,13 @@ public class Home extends AppCompatActivity
         recycle_menu.setAdapter(adapter);
 
     }
+
     @Override
     public void onStart() {
         super.onStart();
         auth.addAuthStateListener(authListener);
     }
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -162,7 +175,6 @@ public class Home extends AppCompatActivity
         }
         adapter.stopListening();
     }
-
 
 
     @Override
@@ -206,6 +218,9 @@ public class Home extends AppCompatActivity
         if (id == R.id.nav_menu) {
             // Handle the camera action
         } else if (id == R.id.nav_cart) {
+            Intent cartIntent = new Intent(Home.this, Cart.class);
+            startActivity(cartIntent);
+            finish();
 
         } else if (id == R.id.nav_orders) {
 
@@ -217,6 +232,7 @@ public class Home extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     //sign out method
     public void signOut() {
         auth.signOut();

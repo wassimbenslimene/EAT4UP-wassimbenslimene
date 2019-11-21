@@ -33,7 +33,7 @@
             android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:autoSizeTextType="uniform"
-            android:hint="NumeroTel"
+            android:hint="Email"
 
             android:inputType="textEmailAddress"
             android:maxLines="1"

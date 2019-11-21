@@ -25,8 +25,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SignIn extends AppCompatActivity {
-
-    private EditText inputEmail, inputPassword;
+    public EditText inputEmail;
+    private EditText  inputPassword;
     private FirebaseAuth auth;
     private ProgressBar progressBar;
     private Button btnSignup, btnLogin, btnReset;
@@ -75,7 +75,7 @@ public class SignIn extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = inputEmail.getText().toString();
+                final String email = inputEmail.getText().toString();
                 final String password = inputPassword.getText().toString();
 
                 if (TextUtils.isEmpty(email)) {
@@ -108,7 +108,8 @@ public class SignIn extends AppCompatActivity {
                                     }
                                 } else {
                                     Intent homeIntent =new Intent(SignIn.this,Home.class);
-                                    //Common.currentUser =user;
+                                   // Common.currentUser.setName(email);
+                                   // Common.currentUser.setPassword(password);
                                     startActivity(homeIntent);
                                     finish();
                                 }

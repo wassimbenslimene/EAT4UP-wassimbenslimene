@@ -3,7 +3,7 @@
     <color name="colorPrimary">#8BC34A</color>
     <color name="colorPrimaryDark">#00251A</color>
     <color name="colorAccent">#39796b</color>
-
+    <color name="bois">#c5af8b</color>
     <color name="white">#ffff</color>
     <color name="btnSignActive">#8BC34A</color>
     <color name="bg_login">#26ae90</color>

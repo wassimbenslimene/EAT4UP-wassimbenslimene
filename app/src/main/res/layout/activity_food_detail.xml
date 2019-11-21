@@ -89,11 +89,13 @@
 
                         android:orientation="horizontal">
 
-                        <ImageView
+                        <TextView
                             android:layout_width="0dp"
+                            android:layout_marginLeft="15dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            app:srcCompat="@drawable/ic_attach_money_black_24dp" />
+                            android:textColor="@color/black"
+                            android:text="DT"/>
 
                         <TextView
                             android:id="@+id/food_price"
