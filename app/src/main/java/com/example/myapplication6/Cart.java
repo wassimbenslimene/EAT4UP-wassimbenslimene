@@ -73,7 +73,7 @@ public class Cart extends AppCompatActivity {
     private void showAlertDialog() {
         AlertDialog.Builder alertDialog=new AlertDialog.Builder(Cart.this);
         alertDialog.setTitle("one more step");
-        alertDialog.setMessage("enter your table number:  ");
+        alertDialog.setMessage("enter your table number and your comment :  ");
         final EditText edttable = new EditText(Cart.this);
         LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
