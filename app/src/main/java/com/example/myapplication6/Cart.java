@@ -3,10 +3,9 @@ package com.example.myapplication6;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,13 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication6.Database.Database;
 import com.example.myapplication6.ViewHolder.CartAdapter;
-import com.example.myapplication6.common.Common;
 import com.example.myapplication6.model.Order;
 import com.example.myapplication6.model.Request;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -74,13 +73,12 @@ public class Cart extends AppCompatActivity {
         AlertDialog.Builder alertDialog=new AlertDialog.Builder(Cart.this);
         alertDialog.setTitle("one more step");
         alertDialog.setMessage("enter your table number and your comment :  ");
-        final EditText edttable = new EditText(Cart.this);
-        LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-        );
-        edttable.setLayoutParams(lp);
-        alertDialog.setView(edttable);//add edit text to alert dialog
+        LayoutInflater inflater = this.getLayoutInflater();
+        View order_address_comment =inflater.inflate(R.layout.order_table_comment,null);
+        MaterialEditText edttable=(MaterialEditText)order_address_comment.findViewById(R.id.edtTable);
+        MaterialEditText edtComment=(MaterialEditText)order_address_comment.findViewById(R.id.edtComment);
+        alertDialog.setView(order_address_comment);//add edit text to alert dialog
+
         alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
@@ -98,6 +96,7 @@ public class Cart extends AppCompatActivity {
                         email,
                         edttable.getText().toString(),
                         txtTotalPrice.getText().toString(),
+                        edtComment.getText().toString(),
                         cart
                 );
                 //submit to firebase
