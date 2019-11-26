@@ -6,17 +6,27 @@ public class Order {
     private  String Quantity;
     private  String Price;
     private  String Discount;
+    private  String Comment;
 
 
     public Order() {
     }
 
-    public Order(String productId, String productName, String quantity, String price, String discount) {
+    public String getComment() {
+        return Comment;
+    }
+
+    public void setComment(String comment) {
+        Comment = comment;
+    }
+
+    public Order(String productId, String productName, String quantity, String price, String discount, String comment) {
         ProductId = productId;
         ProductName = productName;
         Quantity = quantity;
         Price = price;
         Discount = discount;
+        Comment=comment;
     }
 
     public String getProductId() {

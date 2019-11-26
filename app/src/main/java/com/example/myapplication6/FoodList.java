@@ -20,6 +20,7 @@ import com.example.myapplication6.model.Category;
 import com.example.myapplication6.model.Food;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,6 +44,8 @@ public class FoodList extends AppCompatActivity {
         setContentView(R.layout.activity_food_list);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
+
+
         setSupportActionBar(toolbar);
         //firebase
         database = FirebaseDatabase.getInstance();
@@ -59,6 +62,15 @@ public class FoodList extends AppCompatActivity {
         if (categoryId != null && !categoryId.isEmpty()) {
             loadListFood(categoryId);
         }
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent cartIntent = new Intent(FoodList.this, Cart.class);
+                startActivity(cartIntent);
+
+            }
+        });
 
     }
 

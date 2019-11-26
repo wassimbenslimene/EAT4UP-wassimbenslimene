@@ -8,6 +8,9 @@
     <color name="btnSignActive">#8BC34A</color>
     <color name="bg_login">#26ae90</color>
     <color name="black">#000</color>
+    <color name="orange">#FFA500</color>
+
+
     <color name="yellow">#FFEB3B</color>
     <color name="bg_main">#428bca</color>
     <color name="input_login">#222222</color>
