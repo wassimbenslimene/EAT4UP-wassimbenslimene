@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,12 +25,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-public class FoodDetail extends AppCompatActivity {
+import java.text.NumberFormat;
+import java.util.Locale;
 
+public class FoodDetail extends AppCompatActivity {
+    EditText food_Comment;
     TextView food_name, food_price, food_description;
     ImageView food_image;
     CollapsingToolbarLayout collapsingToolbarLayout;
-    FloatingActionButton btnCart;
+    Button btnCart;
     ElegantNumberButton numberButton;
     String foodId = "";
 
@@ -47,12 +52,14 @@ public class FoodDetail extends AppCompatActivity {
 
         //init view
         numberButton = (ElegantNumberButton) findViewById(R.id.number_button);
-        btnCart = (FloatingActionButton) findViewById(R.id.btncart);
+
+        food_Comment= (EditText) findViewById(R.id.food_comment);
+        btnCart = (Button) findViewById(R.id.btncart);
         btnCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new Database(getBaseContext()).addToCart(new Order(foodId, currentFood.getName(),numberButton.getNumber()
-                                                                    , currentFood.getPrice(), currentFood.getDiscount()));
+                                                                    , currentFood.getPrice(), currentFood.getDiscount(),food_Comment.getText().toString()));
                 Toast.makeText(FoodDetail.this,"Added to cart",Toast.LENGTH_SHORT).show();
             }
         });
@@ -61,7 +68,7 @@ public class FoodDetail extends AppCompatActivity {
         food_name = (TextView) findViewById(R.id.food_name);
         food_price = (TextView) findViewById(R.id.food_price);
         food_image = (ImageView) findViewById(R.id.img_food);
-
+        food_Comment= (EditText) findViewById(R.id.food_comment);
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing);
         collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpanddedAppbar);
@@ -73,6 +80,15 @@ public class FoodDetail extends AppCompatActivity {
         if (foodId != null && !foodId.isEmpty()) {
             getDetailFood(foodId);
         }
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent cartIntent = new Intent(FoodDetail.this, Cart.class);
+                startActivity(cartIntent);
+
+            }
+        });
     }
 
     private void getDetailFood(String foodId) {
@@ -84,7 +100,9 @@ public class FoodDetail extends AppCompatActivity {
                 //SET IMAGE
                 Picasso.with(getBaseContext()).load(currentFood.getImage()).into(food_image);
                 collapsingToolbarLayout.setTitle(currentFood.getName());
-                food_price.setText(currentFood.getPrice());
+                Locale locale = new Locale("en", "TN");
+                NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
+                food_price.setText(fmt.format(Float.parseFloat(currentFood.getPrice())));
                 food_name.setText(currentFood.getName());
                 food_description.setText(currentFood.getDescription());
             }

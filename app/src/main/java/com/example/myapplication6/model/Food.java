@@ -8,11 +8,14 @@ public class Food {
     public Food() {
     }
 
+
+
     public Food(String name, String image, String description, String price, String discount, String menuId) {
         Name = name;
         Image = image;
         Description = description;
         Price = price;
+
         Discount = discount;
         MenuId = menuId;
     }

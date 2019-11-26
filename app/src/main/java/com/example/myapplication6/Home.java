@@ -138,7 +138,7 @@ public class Home extends AppCompatActivity
                 final Category clickItem = model;
                 viewHolder.setItemClickListener(new ItemClickListener() {
                     @Override
-                    public void onclick(View view, int positin, boolean isLongClick) {
+                    public void onclick(View view, int position, boolean isLongClick) {
                         //get category and send to new activity
                         Intent foodList = new Intent(Home.this, FoodList.class);
                         //because category is key so we just get key of this item
@@ -185,6 +185,7 @@ public class Home extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+        finish();
     }
 
     @Override
@@ -203,6 +204,8 @@ public class Home extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(Home.this, Home.class);
+            startActivity(intent);
             return true;
         }
 
@@ -223,6 +226,9 @@ public class Home extends AppCompatActivity
             finish();
 
         } else if (id == R.id.nav_orders) {
+            Intent cartIntent = new Intent(Home.this, Order.class);
+            startActivity(cartIntent);
+
 
         } else if (id == R.id.nav_logout) {
             signOut();

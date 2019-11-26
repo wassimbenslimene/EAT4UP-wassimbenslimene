@@ -2,6 +2,7 @@ package com.example.myapplication6.ViewHolder;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.example.myapplication6.Interface.ItemClickListener;
 import com.example.myapplication6.R;
+import com.example.myapplication6.common.Common;
 import com.example.myapplication6.model.Order;
 
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener ,View.OnCreateContextMenuListener {
 
 
     public TextView txt_cart_name, txt_Price;
@@ -37,11 +39,19 @@ class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickList
         txt_cart_name = (TextView) itemView.findViewById(R.id.cart_item_name);
         txt_Price = (TextView) itemView.findViewById(R.id.cart_item_Price);
         img_cart_count = (ImageView) itemView.findViewById(R.id.cart_item_count);
+
+        itemView.setOnCreateContextMenuListener(this);
     }
 
     @Override
     public void onClick(View v) {
 
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+        contextMenu.setHeaderTitle("Are you sure you want to delete this item ?");
+        contextMenu.add(0,0,getAdapterPosition(), Common.DELETE);
     }
 }
 
@@ -69,7 +79,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
         holder.img_cart_count.setImageDrawable(drawable);
         Locale locale = new Locale("en", "TN");
         NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
-        int price = (Integer.parseInt(ListData.get(position).getPrice())) * (Integer.parseInt(ListData.get(position).getQuantity()));
+        float price = (Float.parseFloat(ListData.get(position).getPrice())) * (Float.parseFloat(ListData.get(position).getQuantity()));
         holder.txt_Price.setText(fmt.format(price));
 
         holder.txt_cart_name.setText(ListData.get(position).getProductName());
