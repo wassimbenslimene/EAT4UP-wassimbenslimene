@@ -3,12 +3,11 @@ package com.example.myapplication6;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.view.MenuItem;
-
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +31,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,18 +67,18 @@ public class Cart extends AppCompatActivity {
         txtTotalPrice = (TextView) findViewById(R.id.total);
         //name = (TextView) findViewById(R.id.editText2);
         btnplace = (Button) findViewById(R.id.btnplaceOrder);
-       btnplace.setOnClickListener(new View.OnClickListener() {
+        btnplace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Creat new Request
-               if(cart.size()>0) {
-                   showAlertDialog();
+                if(cart.size()>0) {
+                    showAlertDialog();
 
-               }
-               else{
-                   Toast.makeText(Cart.this,"your cart is empty !!",Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(Cart.this,"your cart is empty !!",Toast.LENGTH_SHORT).show();
 
-               }
+                }
 
 
 
@@ -93,13 +91,14 @@ public class Cart extends AppCompatActivity {
     private void showAlertDialog() {
         AlertDialog.Builder alertDialog=new AlertDialog.Builder(Cart.this);
         alertDialog.setTitle("one more step");
-        alertDialog.setMessage("enter your table number and your comment :  ");
-        LayoutInflater inflater = this.getLayoutInflater();
-        View order_address_comment =inflater.inflate(R.layout.order_table_comment,null);
-        MaterialEditText edttable=(MaterialEditText)order_address_comment.findViewById(R.id.edtTable);
-        MaterialEditText edtComment=(MaterialEditText)order_address_comment.findViewById(R.id.edtComment);
-        alertDialog.setView(order_address_comment);//add edit text to alert dialog
-
+        alertDialog.setMessage("enter your table number:  ");
+        final EditText edttable = new EditText(Cart.this);
+        LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
+        edttable.setLayoutParams(lp);
+        alertDialog.setView(edttable);//add edit text to alert dialog
         alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
@@ -109,17 +108,16 @@ public class Cart extends AppCompatActivity {
                 String uid="";
                 if (user != null) {
                     // Name, email address, and profile photo Url
-                     //name = user.getDisplayName();
+                    //name = user.getDisplayName();
                     uid = user.getUid();
-                     email = user.getEmail();
+                    email = user.getEmail();
                 }
                 Request request=new Request(
                         //Common.currentUser.getPhone(),
-                       // Common.currentUser.getName(),
+                        // Common.currentUser.getName(),
                         email,
                         edttable.getText().toString(),
                         txtTotalPrice.getText().toString(),
-                        edtComment.getText().toString(),
                         cart
                 );
                 //submit to firebase
@@ -190,8 +188,8 @@ public class Cart extends AppCompatActivity {
         cart = new Database(this).getCarts();
 
         //adapter = new CartAdapter(cart);
-         adapter=new CartAdapter(cart,this);
-         adapter.notifyDataSetChanged();
+        adapter=new CartAdapter(cart,this);
+        adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
         //calculate Totale Price
         float Totale = 0;

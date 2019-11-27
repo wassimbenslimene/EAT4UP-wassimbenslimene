@@ -89,29 +89,6 @@ public class FoodList extends AppCompatActivity {
                 Picasso.with(getBaseContext()).load(model.getImage())
                         .into(viewHolder.food_image);
 
-
-                //Add favorites
-                if(localDB.isFavorite(adapter.getRef(position).getKey()))
-                    viewHolder.fav_image.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                //Click to change State of favorites
-                viewHolder.fav_image.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(!localDB.isFavorite(adapter.getRef(position).getKey())) {
-                            localDB.addToFavorites(adapter.getRef(position).getKey());
-                            viewHolder.fav_image.setImageResource(R.drawable.ic_favorite_black_24dp);
-                            Toast.makeText(FoodList.this,""+model.getName()+"was added to favorites",Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
-                            localDB.removeFavorites(adapter.getRef(position).getKey());
-                            viewHolder.fav_image.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                            Toast.makeText(FoodList.this,""+model.getName()+"was removed from favorites",Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-                });
-
                 final Food local = model;
                 viewHolder.setItemClickListener(new ItemClickListener() {
 
