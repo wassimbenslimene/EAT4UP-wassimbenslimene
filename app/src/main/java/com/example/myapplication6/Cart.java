@@ -112,23 +112,26 @@ public class Cart extends AppCompatActivity {
                     uid = user.getUid();
                     email = user.getEmail();
                 }
-                Request request=new Request(
-                        //Common.currentUser.getPhone(),
-                        // Common.currentUser.getName(),
-                        email,
-                        edttable.getText().toString(),
-                        txtTotalPrice.getText().toString(),
-                        cart
+
+                Request request = new Request(
+                            //Common.currentUser.getPhone(),
+                            // Common.currentUser.getName(),
+                            email,
+                            edttable.getText().toString(),
+                            txtTotalPrice.getText().toString(),
+                            cart
                 );
-                //submit to firebase
-                //We will using System to
+                    //submit to firebase
+                    //We will using System to
                 requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
+
+
                 JSONObject obj =new JSONObject();
 
                 JSONArray array = new JSONArray();
                 try {
-                    obj.put("email","wassim.b.slimene@gmail.com");
-                    obj.put("uid",uid);
+                    obj.put("email1","wassim.b.slimene@gmail.com");
+                    obj.put("email",email);
                     obj.put("table",edttable.getText().toString());
                     for(Order o:cart){
                         JSONObject item =new JSONObject();
@@ -158,7 +161,7 @@ public class Cart extends AppCompatActivity {
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        System.out.println(error.networkResponse.data);
+                       // System.out.println(error.networkResponse.data.toString());
                         error.printStackTrace();
                     }
                 });
@@ -169,6 +172,7 @@ public class Cart extends AppCompatActivity {
                 //Delet Cart
                 new Database(getBaseContext()).CleanCart();
                 Toast.makeText(Cart.this,"Thank you ,order Place",Toast.LENGTH_SHORT).show();
+                LoadListFood();
 
 
             }

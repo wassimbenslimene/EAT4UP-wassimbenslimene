@@ -11,8 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import com.example.myapplication6.common.Common;
-import com.example.myapplication6.model.User;
+
 import android.widget.Toast;
 //import android.widget.Toolbar;
 
@@ -108,8 +107,7 @@ public class SignIn extends AppCompatActivity {
                                     }
                                 } else {
                                     Intent homeIntent =new Intent(SignIn.this,Home.class);
-                                   // Common.currentUser.setName(email);
-                                   // Common.currentUser.setPassword(password);
+
                                     startActivity(homeIntent);
                                     finish();
                                 }

@@ -99,7 +99,7 @@ public class FoodDetail extends AppCompatActivity {
                 currentFood = dataSnapshot.getValue(Food.class);
                 //SET IMAGE
                 Picasso.with(getBaseContext()).load(currentFood.getImage()).into(food_image);
-                collapsingToolbarLayout.setTitle(currentFood.getName());
+                //collapsingToolbarLayout.setTitle(currentFood.getName());
                 Locale locale = new Locale("en", "TN");
                 NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
                 food_price.setText(fmt.format(Float.parseFloat(currentFood.getPrice())));

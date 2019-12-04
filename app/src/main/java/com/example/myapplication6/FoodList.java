@@ -39,7 +39,7 @@ public class FoodList extends AppCompatActivity {
     FirebaseRecyclerAdapter<Food, FoodViewHolder> adapter;
     String categoryId = "";
     //favorites
-    Database localDB;
+   // Database localDB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +52,7 @@ public class FoodList extends AppCompatActivity {
         //firebase
         database = FirebaseDatabase.getInstance();
         foodList = database.getReference("Foods");
-        localDB=new Database(this);
+        //localDB=new Database(this);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_food);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);

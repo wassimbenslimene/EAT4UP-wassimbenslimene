@@ -39,14 +39,7 @@
             android:maxLines="1"
             android:singleLine="true" />
 
-        <EditText
-            android:id="@+id/name"
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
-            android:autoSizeTextType="uniform"
-            android:hint="name"
-            android:maxLines="1"
-            android:singleLine="true" />
+
 
         <EditText
             android:id="@+id/password"
